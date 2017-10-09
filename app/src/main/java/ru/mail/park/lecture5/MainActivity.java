@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private static final int MIN_COLUMNS = 2;
 
@@ -20,15 +23,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle(R.string.cheeses_title);
 
-        final int columns = getColumnCount();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        adapter = new CheeseGridAdapter(columns);
+        final int columns = getColumnCount();
+
+        List<Item> items = buildItemList(columns);
+        adapter = new CheeseGridAdapter(items);
+
         GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 switch (adapter.getItemViewType(position)) {
-                    case CheeseGridAdapter.ITEM_TITLE:
+                    case CheeseGridAdapter.ITEM_HEADER:
                         return columns;
                     case CheeseGridAdapter.ITEM_CHEESE_CARD:
                         return 1;
@@ -40,9 +46,26 @@ public class MainActivity extends AppCompatActivity {
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, columns);
         layoutManager.setSpanSizeLookup(spanSizeLookup);
+
         recyclerView.setLayoutManager(layoutManager);
+
         recyclerView.setAdapter(adapter);
     }
+
+
+    public List<Item> buildItemList(int columns) {
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < Cheeses.cheeseNames.length; i++) {
+            if (i % (2*columns) == 0)
+                items.add(new HeaderItem(Cheeses.getRandomTitle()));
+
+            String cheeseName = Cheeses.cheeseNames[i];
+            items.add(new CheeseItem(cheeseName, Cheeses.getCheeseDrawable(cheeseName)));
+        }
+
+        return items;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

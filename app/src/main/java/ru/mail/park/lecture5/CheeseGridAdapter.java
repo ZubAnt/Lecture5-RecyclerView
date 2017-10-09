@@ -8,23 +8,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 
 public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int ITEM_TITLE = R.layout.item_title;
-    public static final int ITEM_CHEESE_CARD = R.layout.item_cheese_card;
-    private final int columnCount;
+    static final int ITEM_HEADER = R.layout.item_title;
+    static final int ITEM_CHEESE_CARD = R.layout.item_cheese_card;
+    static final int INVALID_TYPE = -1;
 
-    public CheeseGridAdapter(int columns) {
-        columnCount = columns;
+    private List<Item> items;
+
+    public CheeseGridAdapter(List<Item> itemList) {
+        items = itemList;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
-            case ITEM_TITLE:
-                View titleView = LayoutInflater.from(context).inflate(ITEM_TITLE, parent, false);
+            case ITEM_HEADER:
+                View titleView = LayoutInflater.from(context).inflate(ITEM_HEADER, parent, false);
                 return new TitleViewHolder(titleView);
 
             case ITEM_CHEESE_CARD:
@@ -38,18 +42,23 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Item item = items.get(position);
+
         switch (getItemViewType(position)) {
-            case ITEM_TITLE:
-                ((TitleViewHolder) holder).headingView.setText(Cheeses.getRandomTitle());
+            case ITEM_HEADER:
+                ((TitleViewHolder) holder).headingView.setText(item.getTitle());
                 break;
 
             case ITEM_CHEESE_CARD:
                 CardViewHolder cardHolder = ((CardViewHolder) holder);
-                String cheese = Cheeses.cheeseNames[getCheeseArrayIndex(position)];
-                cardHolder.imageView.setImageResource(Cheeses.getCheeseDrawable(cheese));
+                String cheese = item.getTitle();
+
+                cardHolder.imageView.setImageResource(((CheeseItem) item).getImageResId());
                 cardHolder.textView.setText(cheese);
-                boolean isFavorite = Cheeses.favoriteCheeses.contains(cheese);
+
+                boolean isFavorite = Cheeses.getFavoriteCheeses().contains(cheese);
                 cardHolder.favButton.setImageResource(isFavorite ? R.drawable.ic_favorite_selected : R.drawable.ic_favorite_unselected);
+
                 break;
 
             default:
@@ -59,21 +68,18 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position % (columnCount + 1) == 0)
-            return R.layout.item_title;
-        else
-            return R.layout.item_cheese_card;
+        switch(items.get(position).getType()) {
+            case CHEESE:
+                return ITEM_CHEESE_CARD;
+            case HEADER:
+                return ITEM_HEADER;
+        }
+        return INVALID_TYPE;
     }
 
     @Override
     public int getItemCount() {
-        return Cheeses.cheeseNames.length + (int) Math.ceil(Cheeses.cheeseNames.length / (double)(columnCount));
-    }
-
-    // чтобы получить реальную позицию карточки в списке сыров,
-    // вычитаем количество заголовков, которое было до данного элемента RecyclerView
-    private int getCheeseArrayIndex(int position) {
-        return (int) (position - Math.ceil(position / (double)(columnCount + 1)));
+        return items.size();
     }
 
     class CardViewHolder extends RecyclerView.ViewHolder {
@@ -103,12 +109,12 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onClick(View v) {
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
-                String cheeseName = holder.textView.getText().toString();
+                String cheeseName = items.get(position).getTitle();
 
-                if (Cheeses.favoriteCheeses.contains(cheeseName)) {
-                    Cheeses.favoriteCheeses.remove(cheeseName);
+                if (Cheeses.getFavoriteCheeses().contains(cheeseName)) {
+                    Cheeses.getFavoriteCheeses().remove(cheeseName);
                 } else {
-                    Cheeses.favoriteCheeses.add(cheeseName);
+                    Cheeses.getFavoriteCheeses().add(cheeseName);
                 }
                 notifyItemChanged(position);
             }
@@ -116,7 +122,6 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class TitleViewHolder extends RecyclerView.ViewHolder {
-
         TextView headingView;
 
         TitleViewHolder(View itemView) {

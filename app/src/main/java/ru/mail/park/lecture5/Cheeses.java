@@ -21,9 +21,15 @@ import java.util.TreeSet;
 
 public class Cheeses {
 
+
+
     private static final Random RANDOM = new Random();
 
-    public static TreeSet<String> favoriteCheeses = new TreeSet<>();
+    public static TreeSet<String> getFavoriteCheeses() {
+        return favoriteCheeses;
+    }
+
+    private static TreeSet<String> favoriteCheeses = new TreeSet<>();
 
     public static int getCheeseDrawable(String cheeseName) {
         switch (cheeseName.hashCode() % 8) {
