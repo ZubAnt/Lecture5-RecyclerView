@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:id="@+id/heading"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:paddingBottom="@dimen/padding"
+          android:paddingEnd="4dp"
+          android:paddingStart="4dp"
+          android:paddingTop="@dimen/padding"
+          android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+          tools:text="Heading"/>

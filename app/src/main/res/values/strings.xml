@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Lecture5</string>
+    <string name="cheeses_title">Cheeses</string>
+    <string name="favorite_title">Favorites</string>
+</resources>
