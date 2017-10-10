@@ -16,8 +16,8 @@
 
 package ru.mail.park.lecture5;
 
+import java.util.LinkedHashSet;
 import java.util.Random;
-import java.util.TreeSet;
 
 public class Cheeses {
 
@@ -25,11 +25,11 @@ public class Cheeses {
 
     private static final Random RANDOM = new Random();
 
-    public static TreeSet<String> getFavoriteCheeses() {
+    public static LinkedHashSet<String> getFavoriteCheeses() {
         return favoriteCheeses;
     }
 
-    private static TreeSet<String> favoriteCheeses = new TreeSet<>();
+    private static LinkedHashSet<String> favoriteCheeses = new LinkedHashSet<>();
 
     public static int getCheeseDrawable(String cheeseName) {
         switch (cheeseName.hashCode() % 8) {

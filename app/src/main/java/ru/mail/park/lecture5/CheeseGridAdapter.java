@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 
@@ -43,6 +45,7 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Item item = items.get(position);
+        Context context = holder.itemView.getContext();
 
         switch (getItemViewType(position)) {
             case ITEM_HEADER:
@@ -53,8 +56,9 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 CardViewHolder cardHolder = ((CardViewHolder) holder);
                 String cheese = item.getTitle();
 
-                cardHolder.imageView.setImageResource(((CheeseItem) item).getImageResId());
+                int imageResId = ((CheeseItem) item).getImageResId();
                 cardHolder.textView.setText(cheese);
+                Glide.with(context).load(imageResId).into(cardHolder.imageView);
 
                 boolean isFavorite = Cheeses.getFavoriteCheeses().contains(cheese);
                 cardHolder.favButton.setImageResource(isFavorite ? R.drawable.ic_favorite_selected : R.drawable.ic_favorite_unselected);
