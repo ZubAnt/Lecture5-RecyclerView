@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle(R.string.cheeses_title);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         final int columns = getColumnCount();
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 items.add(new HeaderItem(Cheeses.getRandomTitle()));
 
             String cheeseName = Cheeses.cheeseNames[i];
-            items.add(new CheeseItem(cheeseName, Cheeses.getCheeseDrawable(cheeseName)));
+            items.add(new Cheese(cheeseName, Cheeses.getCheeseDrawable(cheeseName)));
         }
 
         return items;
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_fav) {
-            startActivity(new Intent(this, FavoriteActivity.class));
+        if (item.getItemId() == R.id.menu_order) {
+            startActivity(new Intent(this, OrderActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

@@ -19,4 +19,21 @@ public abstract class Item {
         return title;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (type != item.type) return false;
+        return title.equals(item.title);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + title.hashCode();
+        return result;
+    }
 }

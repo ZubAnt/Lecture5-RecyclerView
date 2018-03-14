@@ -56,12 +56,15 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 CardViewHolder cardHolder = ((CardViewHolder) holder);
                 String cheese = item.getTitle();
 
-                int imageResId = ((CheeseItem) item).getImageResId();
                 cardHolder.textView.setText(cheese);
+                cardHolder.price.setText(context.getString(R.string.price, ((Cheese) item).getPrice()));
+
+                int imageResId = ((Cheese) item).getImageResId();
                 Glide.with(context).load(imageResId).into(cardHolder.imageView);
 
-                boolean isFavorite = Cheeses.getFavoriteCheeses().contains(cheese);
-                cardHolder.favButton.setImageResource(isFavorite ? R.drawable.ic_favorite_selected : R.drawable.ic_favorite_unselected);
+                boolean isAdded = Cheeses.getShoppingCart().contains(item);
+                cardHolder.addRemoveButton.setImageResource(isAdded ?
+                        R.drawable.ic_remove_cart : R.drawable.ic_add_cart);
 
                 break;
 
@@ -90,22 +93,24 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ImageView imageView;
         TextView textView;
-        ImageView favButton;
+        ImageView addRemoveButton;
+        TextView price;
 
         CardViewHolder(final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
             textView = itemView.findViewById(R.id.text);
-            favButton = itemView.findViewById(R.id.button);
+            price = itemView.findViewById(R.id.price);
+            addRemoveButton = itemView.findViewById(R.id.button);
 
-            favButton.setOnClickListener(new FavClickListener(this));
+            addRemoveButton.setOnClickListener(new AddRemoveClickListener(this));
         }
     }
 
-    class FavClickListener implements View.OnClickListener {
+    class AddRemoveClickListener implements View.OnClickListener {
         CardViewHolder holder;
 
-        FavClickListener(CardViewHolder holder) {
+        AddRemoveClickListener(CardViewHolder holder) {
             this.holder = holder;
         }
 
@@ -113,12 +118,12 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onClick(View v) {
             int position = holder.getLayoutPosition();
             if (position != RecyclerView.NO_POSITION) {
-                String cheeseName = items.get(position).getTitle();
+                Cheese item = (Cheese) items.get(position);
 
-                if (Cheeses.getFavoriteCheeses().contains(cheeseName)) {
-                    Cheeses.getFavoriteCheeses().remove(cheeseName);
+                if (Cheeses.getShoppingCart().contains(item)) {
+                    Cheeses.getShoppingCart().remove(item);
                 } else {
-                    Cheeses.getFavoriteCheeses().add(cheeseName);
+                    Cheeses.getShoppingCart().add(item);
                 }
                 notifyItemChanged(position);
             }

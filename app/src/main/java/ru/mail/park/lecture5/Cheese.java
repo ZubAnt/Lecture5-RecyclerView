@@ -1,9 +1,9 @@
 package ru.mail.park.lecture5;
 
-public class CheeseItem extends Item {
+public class Cheese extends Item {
     private int imageResId;
 
-    public CheeseItem(String title, int imageRes){
+    public Cheese(String title, int imageRes){
         super(Type.CHEESE, title);
         imageResId = imageRes;
     }
@@ -11,4 +11,6 @@ public class CheeseItem extends Item {
     public int getImageResId() {
         return imageResId;
     }
+
+    public int getPrice() { return Math.abs(getTitle().hashCode() % 1000);}
 }

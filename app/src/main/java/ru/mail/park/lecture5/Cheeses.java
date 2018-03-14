@@ -25,11 +25,11 @@ public class Cheeses {
 
     private static final Random RANDOM = new Random();
 
-    public static LinkedHashSet<String> getFavoriteCheeses() {
-        return favoriteCheeses;
+    public static LinkedHashSet<Cheese> getShoppingCart() {
+        return cartContent;
     }
 
-    private static LinkedHashSet<String> favoriteCheeses = new LinkedHashSet<>();
+    private static LinkedHashSet<Cheese> cartContent = new LinkedHashSet<>();
 
     public static int getCheeseDrawable(String cheeseName) {
         switch (cheeseName.hashCode() % 8) {
