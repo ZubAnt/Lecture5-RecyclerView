@@ -2,6 +2,7 @@ package ru.mail.park.lecture5;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int MIN_COLUMNS = 2;
+
+    static final int PICK_REMOVE_REQUEST = 1;  // The request code
 
     private CheeseGridAdapter adapter;
 
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_order) {
-            startActivity(new Intent(this, OrderActivity.class));
+            startActivityForResult(new Intent(this, OrderActivity.class), PICK_REMOVE_REQUEST);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -89,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
         int minColumnWidth = res.getDimensionPixelSize(R.dimen.min_image_width);
 
         return Math.max((screenWidth - 2*padding) / minColumnWidth, MIN_COLUMNS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == PICK_REMOVE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
 }
