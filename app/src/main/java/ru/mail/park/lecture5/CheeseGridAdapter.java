@@ -2,6 +2,7 @@ package ru.mail.park.lecture5;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final String TAG = "Adapter";
     static final int ITEM_HEADER = R.layout.item_title;
     static final int ITEM_CHEESE_CARD = R.layout.item_cheese_card;
     static final int INVALID_TYPE = -1;
@@ -27,6 +29,7 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d(TAG, "onCreateViewHolder: " + (viewType == ITEM_HEADER ? "HEADER" : "CARD"));
         Context context = parent.getContext();
         switch (viewType) {
             case ITEM_HEADER:
@@ -49,12 +52,17 @@ public class CheeseGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         switch (getItemViewType(position)) {
             case ITEM_HEADER:
-                ((TitleViewHolder) holder).headingView.setText(item.getTitle());
+                String header = item.getTitle();
+                Log.v(TAG, "onBindViewHolder HEADER: " + header);
+
+                ((TitleViewHolder) holder).headingView.setText(header);
                 break;
 
             case ITEM_CHEESE_CARD:
                 CardViewHolder cardHolder = ((CardViewHolder) holder);
                 String cheese = item.getTitle();
+
+                Log.v(TAG, "onBindViewHolder CARD: " + cheese);
 
                 cardHolder.textView.setText(cheese);
                 cardHolder.price.setText(context.getString(R.string.price, ((Cheese) item).getPrice()));
