@@ -27,13 +27,13 @@ public abstract class Item {
         Item item = (Item) o;
 
         if (type != item.type) return false;
-        return title.equals(item.title);
+        return title != null ? title.equals(item.title) : item.title == null;
     }
 
     @Override
     public int hashCode() {
         int result = type.hashCode();
-        result = 31 * result + title.hashCode();
+        result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
     }
 }

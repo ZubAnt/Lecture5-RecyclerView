@@ -3,4 +3,5 @@
     <string name="cheeses_title">Cheeses</string>
     <string name="order_title">Order</string>
     <string name="price">%d P</string>
+    <string name="subtotal">Subtotal:</string>
 </resources>
